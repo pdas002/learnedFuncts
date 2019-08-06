@@ -1,5 +1,32 @@
 from functools import partial
 
+def matrixReduce(array2d):
+  lead = 0
+  rowC = len(array2d)
+  colC = len(array2d[0])
+  for r in range(rowC):
+    if colC <= lead:
+      break
+    i = r
+    while (array2d[i][lead]) == 0:
+      i += 1
+      if rowC == i:
+        i = r
+        lead += 1
+        if colC == lead:
+          break
+    array2d[r], array2d[i] = array2d[i], array2d[r]
+    if array2d[r][lead] != 0:
+      array2d[r] = [(x/array2d[r][lead]) for x in array2d[r]]
+    for j in range(rowC):
+      if j != r:
+        temparray2d = [(array2d[j][lead] * x) for x in array2d[r]]
+        array2d[j] = [k - l for k, l in zip(array2d[j], temparray2d)]
+    lead += lead
+  return array2d
+
+
+
 def integrate(f, a, b):
   delta = 1 / 10000
   x = a
@@ -72,7 +99,9 @@ def sel():
   case = input("Selection: ")
   seldict = {
     '1': partial(integrate, testfunct, 0, 5),
-    '2': partial(intPolyIntegrate, "3x^3+2x^6")
+    '2': partial(intPolyIntegrate, "3x^3+2x^6"),
+    '3': partial(matrixReduce, [[1,2,-1,-4],[2,3,-1,-11],[-2,0,-3,22]])
+
   }
   print(seldict.get(case, error)()) # 9 is default if case not found
 
