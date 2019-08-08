@@ -65,7 +65,7 @@ def intPolyIntegrate(string):
   for chr in string:
     if start:
       if (str.isdigit(chr)):
-        coefs += chr
+        coefs += "("+ chr + ")"
         foundCoef = True
       if (str.isalpha(chr)):
         var = chr
@@ -78,8 +78,8 @@ def intPolyIntegrate(string):
       exp = int(chr)
       exp += 1
       expos += str(exp)
-      tmpcoef = coefs[-1]
-      coefs = coefs[:-1]
+      tmpcoef = coefs[-2]
+      coefs = coefs[:-3]
       coefs += "(" + tmpcoef + "/" + str(exp) + ")"
       start = True
       foundCoef = False
@@ -110,17 +110,45 @@ def error():
 def testfunct(x):
   return x ** 2
 
+def arrayCreate():
+  l = []
+  while(1):
+    row = input("Enter coloumn members, seperated by only commas. Enter nothing to finish: ")
+    if len(row) == 0:
+      break
+    temprow = []
+    index = 0
+    while(1): #create a row
+      if index > (len(row)-1):
+        break
+      tempcol = ""
+      while(1): #create a row element
+          if index > (len(row)-1):
+            temprow.append(int(tempcol))
+            break
+          if(row[index] == ','):
+            index+=1
+            temprow.append(int(tempcol))
+            break
+          tempcol += row[index]
+          index+=1
+    l.append(temprow)
+  return l
+
 
 def sel():
   case = input("Selection: ")
-  seldict = {
-    '1': partial(integrate, testfunct, 0, 5),
-    '2': partial(intPolyIntegrate, "3x^3+2x^6"),
-    '3': partial(matrixReduce, [[1, 2, -1, -4], [2, 3, -1, -11], [-2, 0, -3, 22]]),
-    '4': partial(letterCombination, "MISSISSIPPI")
+  if case == '1':
+    return partial(integrate, testfunct, 0, 5)()
+  elif case == '2':
+    string = input("Enter polynomial: ")
+    return partial(intPolyIntegrate, string)()
+  elif case == '3':
+    return partial(matrixReduce, arrayCreate())()
+  elif case == '4':
+    string = input("Enter word: ")
+    return partial(letterCombination, string)()
 
-  }
-  print(seldict.get(case, error)())  # 9 is default if case not found
 
 
 def main():
@@ -130,7 +158,7 @@ def main():
         "2) integer polynomial integrate\n"
         "3) reduced row echelon matrix\n"
         "4) combination of letters in string\n")
-  sel()
+  print(sel())
 
 
 if __name__ == '__main__':
