@@ -1,6 +1,64 @@
 from functools import partial
 import math
 
+class resistor:
+  def __init__(self, resistance):
+    self.val = resistance
+
+
+class voltageSource:
+  def __init__(self, volts):
+    self.val = volts
+
+class element:
+  def __init__(self, data):
+    self.data = data
+    self.next = None
+    self.prev = None
+
+class circuit:
+  def __init__(self):
+    self.head = None
+    self.tail = None
+
+  def addElement(self, elem):
+    if not isinstance(elem, element):
+      elem = element(elem)
+
+    if self.head == None:
+      self.head = elem
+    else:
+      self.tail.next = elem
+
+    prevTail = self.tail
+    self.tail = elem
+    self.tail.prev = prevTail
+
+  def printCircuit(self):
+    circuit = ''
+    head = self.head
+    while head!= None:
+      circuit += str(head.data.val)
+      if(isinstance(head.data, resistor)):
+        circuit += "R"
+      elif(isinstance(head.data, voltageSource)):
+        circuit += "V"
+      head = head.next
+      if head != None:
+        circuit += "---"
+    return circuit
+
+  def calcCurrent(self):
+    head = self.head
+    voltage = 0
+    resistance = 0
+    while head != None:
+      if (isinstance(head.data, resistor)):
+        resistance += head.data.val
+      elif (isinstance(head.data, voltageSource)):
+        voltage += head.data.val
+      head = head.next
+    return voltage/resistance
 
 def letterCombination(word):
   num = math.factorial(len(word))
@@ -148,8 +206,23 @@ def sel():
   elif case == '4':
     string = input("Enter word: ")
     return partial(letterCombination, string)()
-
-
+  elif case == '5':
+    c = circuit()
+    while(1):
+      element = input("Resistor or Voltage? (R/V): ")
+      if element == 'R':
+        r = input("Resistance: ")
+        c.addElement(resistor(int(r)))
+      elif element == "V":
+        v = input("Voltage: ")
+        c.addElement(voltageSource(int(v)))
+      else:
+        break
+    func = input("Print or calculate current? (P/C):")
+    if func == "P":
+      return c.printCircuit()
+    else:
+      return c.calcCurrent()
 
 def main():
   print("Welcome to a list of learned Functions and Algorithms.\n"
@@ -157,7 +230,8 @@ def main():
         "1) numerical integrate\n"
         "2) integer polynomial integrate\n"
         "3) reduced row echelon matrix\n"
-        "4) combination of letters in string\n")
+        "4) combination of letters in string\n"
+        "5) circuit create and print\n")
   print(sel())
 
 
