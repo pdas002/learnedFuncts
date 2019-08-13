@@ -1,5 +1,5 @@
 from functools import partial
-import math
+import math, os, subprocess
 
 class resistor:
   def __init__(self, resistance):
@@ -223,6 +223,19 @@ def sel():
       return c.printCircuit()
     else:
       return c.calcCurrent()
+  elif case == "6":
+    return runExe("C:\\", "firefox.exe")
+
+def runExe(dirPath, filename):
+  for root, dirs, files in os.walk(dirPath):
+    for file in files:
+      if file == filename:
+        exe = root + '\\' + file
+        subprocess.call(exe)
+        return "Found and ran!"
+  return "Cannot find file"
+
+
 
 def main():
   print("Welcome to a list of learned Functions and Algorithms.\n"
@@ -231,7 +244,8 @@ def main():
         "2) integer polynomial integrate\n"
         "3) reduced row echelon matrix\n"
         "4) combination of letters in string\n"
-        "5) circuit create and print\n")
+        "5) circuit create and print\n"
+        "6) Run .exe")
   print(sel())
 
 
